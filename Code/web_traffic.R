@@ -3,10 +3,14 @@
 # These functions help the user to understand traffic on the site, specificaly looking at traffic volume by hour of day
 # and by date
 
+# Libraries needed to run the functions
 library(dplyr)
 library(data.table)
 library(lubridate)
+library(ggplot2)
+library(gridExtra)
 
+# Function to count activities by hour of day
 web_traffic = function(df){
   hour_freq = as.data.table(table(hour(df$time)))
   colnames(hour_freq) = c("hour", "freq")
@@ -14,6 +18,7 @@ web_traffic = function(df){
   return(hour_freq)
 }
 
+# Function to plot count activities by hour of day
 web_traffic_viz = function(hour_freq){
   p = ggplot(data=hour_freq, aes(x=hour, y=freq)) + 
     geom_col(fill='#00a3ad') +
@@ -25,6 +30,7 @@ web_traffic_viz = function(hour_freq){
   return(p)
 }
 
+# Function to count activities over time (by date)
 web_traffic_ot = function(df){
   day_freq = as.data.table(table(date(df$time)))
   colnames(day_freq) = c("date", "freq")
@@ -32,6 +38,7 @@ web_traffic_ot = function(df){
   return(day_freq)
 }
 
+# Function to plot count activities over time (by date)
 web_traffic_ot_viz = function(day_freq){
   no_of_days = abs(as.integer(difftime(as.Date(min(day_freq$date)), as.Date(max(day_freq$date)), units = "days")))
   day_skip = floor(no_of_days/5) * seq(0, 5)
