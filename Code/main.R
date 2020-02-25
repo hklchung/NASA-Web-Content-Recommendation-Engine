@@ -30,3 +30,6 @@ grid.arrange(web_plot, web_ot_plot, ncol = 1)
 # We can also see that there is a couple of days missing from the dataset, 29-31 July and 2 Aug.
 
 # 2. 
+source('web_content.R')
+top10_url_plot = pop_url_viz(pop_url(df))
+top10_root_plot = pop_root_viz(pop_root(df))
