@@ -29,7 +29,35 @@ grid.arrange(web_plot, web_ot_plot, ncol = 1)
 
 # We can also see that there is a couple of days missing from the dataset, 29-31 July and 2 Aug.
 
-# 2. 
+# 2. Check NASA web content visits-----
+# Using pop_url and pop_root functions to first understand how often each URL or each root URL is visited
+# Then using top10_url_plot and top10_root_plot to visualise the frequency of visits
 source('web_content.R')
 top10_url_plot = pop_url_viz(pop_url(df))
 top10_root_plot = pop_root_viz(pop_root(df))
+top10_url_plot
+top10_root_plot
+
+# 8 out of top 10 most visited urls are .gif files and 7 of these fall under the /images/ root URL, this suggests
+# activities on the site are mostly driven by visual content
+
+# This is further supported by the root URL analysis, where we can observe from the top 10 root URL plot that most
+# online activities on the site are within the /images/ root URL, followed by shuttle and history
+
+# 3. Check host activities on NASA web-----
+# Using host_actv and pop_host_viz functions to first check top 20 active hosts
+# Then using top_host_actv_detl and top_host_actv_viz functions to visualise the breakdown of these top 20 hosts
+# activities within the subpages of each root URL
+source('host.R')
+top20_host_plot = pop_host_viz(host_actv(df))
+top20_host_actv_plot = top_host_actv_viz(top_host_actv_detl(df))
+top20_host_plot
+top20_host_actv_plot
+
+# We can see that the there are a lot of activities coming from prodigy.com and proxy.aol.com, to understand how these
+# users are using the NASA web and what they are interested in, we have broken down their acvities according to the
+# root URL subpages activities logged
+
+# We can see that for the top 20 hosts, their time were mostly spent on /images, /shuttle and /history subpages
+# There were very few activities in the other subpages, suggesting most user engagement comes from the aforementioned
+# 3 root URLs

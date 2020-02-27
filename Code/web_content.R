@@ -55,9 +55,9 @@ pop_root_viz = function(root_freq){
   level_order = root_freq$url_root[1:10]
   p = ggplot(data=root_freq[1:10,], aes(x= factor(url_root, level = level_order), y=freq, fill = url_root)) + 
     geom_col() +
-    ggtitle('Top 10 url/root visited') +
+    ggtitle('Top 10 root URL visited') +
     ylab('Count of visits') +
-    xlab('Root') +
+    xlab('Root URL') +
     theme(axis.line = element_line(colour = "black"), panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(), panel.background = element_blank(),
           axis.text.x=element_text(angle=45, hjust=1))
