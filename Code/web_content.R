@@ -27,8 +27,8 @@ pop_url = function(df){
 # Function to plot top 10 visited URLs
 pop_url_viz = function(url_freq){
   level_order = url_freq$url[1:10]
-  p = ggplot(data=url_freq[1:10,], aes(x= factor(url, level = level_order), y=freq)) + 
-    geom_col(fill='#00a3ad') +
+  p = ggplot(data=url_freq[1:10,], aes(x= factor(url, level = level_order), y=freq, fill = url)) + 
+    geom_col() +
     ggtitle('Top 10 URL visited') +
     ylab('Count of visits') +
     xlab('URLs') +
@@ -53,8 +53,8 @@ pop_root = function(df){
 # Function to plot top 10 visited root folders
 pop_root_viz = function(root_freq){
   level_order = root_freq$url_root[1:10]
-  p = ggplot(data=root_freq[1:10,], aes(x= factor(url_root, level = level_order), y=freq)) + 
-    geom_col(fill='#00a3ad') +
+  p = ggplot(data=root_freq[1:10,], aes(x= factor(url_root, level = level_order), y=freq, fill = url_root)) + 
+    geom_col() +
     ggtitle('Top 10 url/root visited') +
     ylab('Count of visits') +
     xlab('Root') +
