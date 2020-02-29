@@ -7,10 +7,10 @@ rm(list = ls())
 options(java.parameters = "-Xmx8000m")
 library(dplyr)
 library(data.table)
-source('extract_data.R')
 options(scipen = 999)
 
 # Using extract_data function to grab data from raw NASA web log files
+source('extract_data.R')
 df = extract_data('../../Data/nasa_19950630.22-19950728.12.tsv.gz')
 df2 = extract_data('../../Data/nasa_19950731.22-19950831.22.tsv.gz')
 df = rbind(df, df2)
@@ -35,14 +35,23 @@ grid.arrange(web_plot, web_ot_plot, ncol = 1)
 source('web_content.R')
 top10_url_plot = pop_url_viz(pop_url(df))
 top10_root_plot = pop_root_viz(pop_root(df))
-top10_url_plot
-top10_root_plot
+top10_url_ot_plot = pop_url_ot_viz(pop_url(df), df)
+top10_root_ot_plot = pop_root_ot_viz(pop_root(df), df)
+grid.arrange(top10_url_plot, top10_url_ot_plot, ncol = 1)
+grid.arrange(top10_root_plot, top10_root_ot_plot, ncol = 1)
 
-# 8 out of top 10 most visited urls are .gif files and 7 of these fall under the /images/ root URL, this suggests
-# activities on the site are mostly driven by visual content
+# 8 out of top 10 most visited URLs are .gif files and 7 of these fall under the /images/ root URL, this suggests
+# activities on the site are mostly driven by visual content. Looking at the count of requests over time for these
+# top 10 URLs, we can see that it is consistent between 15 July and late Aug with two spikes of interest pre-13 July
+# where a launched occured and around 1 September. Further investigation from the NASA web suggests that the second
+# spike is likely associated with a launch scheduled on 7 September.
 
-# This is further supported by the root URL analysis, where we can observe from the top 10 root URL plot that most
-# online activities on the site are within the /images/ root URL, followed by shuttle and history
+# The observation of large interest in visual content is further supported by the root URL analysis, where we can 
+# observe from the top 10 root URL requested plot that most online activities on the site are within subpages of the 
+# /images/ root URL, followed by shuttle and history. An interesting observation is within this short period of
+# analysis window, there are consistently more requests for subpages within images than shuttle, except for the period
+# prior to the 13 July launch, which suggests there is a surge of interest in shuttle-related information likely
+# associated with the shuttle that is planned for launch. 
 
 # 3. Check host activities on NASA web-----
 # Using host_actv and pop_host_viz functions to first check top 20 active hosts

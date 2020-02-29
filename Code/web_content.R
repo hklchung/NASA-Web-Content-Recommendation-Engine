@@ -29,9 +29,37 @@ pop_url_viz = function(url_freq){
   level_order = url_freq$url[1:10]
   p = ggplot(data=url_freq[1:10,], aes(x= factor(url, level = level_order), y=freq, fill = url)) + 
     geom_col() +
-    ggtitle('Top 10 URL visited') +
-    ylab('Count of visits') +
+    ggtitle('Top 10 URL requested') +
+    ylab('Count of requests') +
     xlab('URLs') +
+    theme(axis.line = element_line(colour = "black"), panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(), panel.background = element_blank(),
+          axis.text.x=element_text(size=rel(0.7), angle=30, hjust=1))
+  return(p)
+}
+
+# Function to plot activities for top 10 visited URLs over time
+pop_url_ot_viz = function(url_freq, df){
+  df_temp = df[df$response < 400,]
+  df_temp$time = as.character(as.Date(df_temp$time))
+  
+  url_freq = url_freq[1:10]
+  
+  temp = data.frame()
+  for (i in sort(url_freq$url)){
+    for (j in unique(df_temp$time)){
+      temp = rbind(temp, data.frame(url = i,
+                                    date = j,
+                                    count = nrow(df_temp[df_temp$url == i & df_temp$time == j,])))
+    }
+  }
+  temp$date = as.Date(temp$date)
+  
+  p = ggplot(data=temp, aes(x= date, y=count, color = url)) + 
+    geom_line(size = 1.2) +
+    ggtitle('Count of requests for top 10 URL visited over time') +
+    ylab('Count of requests') +
+    xlab('Date') +
     theme(axis.line = element_line(colour = "black"), panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(), panel.background = element_blank(),
           axis.text.x=element_text(angle=45, hjust=1))
@@ -55,9 +83,38 @@ pop_root_viz = function(root_freq){
   level_order = root_freq$url_root[1:10]
   p = ggplot(data=root_freq[1:10,], aes(x= factor(url_root, level = level_order), y=freq, fill = url_root)) + 
     geom_col() +
-    ggtitle('Top 10 root URL visited') +
-    ylab('Count of visits') +
+    ggtitle('Top 10 root URL requested') +
+    ylab('Count of requests') +
     xlab('Root URL') +
+    theme(axis.line = element_line(colour = "black"), panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(), panel.background = element_blank(),
+          axis.text.x=element_text(angle=45, hjust=1))
+  return(p)
+}
+
+# Function to plot activities for top 10 visited URLs over time
+pop_root_ot_viz = function(root_freq, df){
+  df_temp = df[df$response < 400,]
+  df_temp$time = as.character(as.Date(df_temp$time))
+  df_temp$root = sapply(strsplit(df_temp$url, "/"), "[", 2)
+  
+  root_freq = root_freq[1:10]
+  
+  temp = data.frame()
+  for (i in sort(root_freq$url_root)){
+    for (j in unique(df_temp$time)){
+      temp = rbind(temp, data.frame(url_root = i,
+                                    date = j,
+                                    count = nrow(df_temp[df_temp$root == i & df_temp$time == j,])))
+    }
+  }
+  temp$date = as.Date(temp$date)
+  
+  p = ggplot(data=temp, aes(x= date, y=count, color = url_root)) + 
+    geom_line(size = 1.2) +
+    ggtitle('Count of requests for subpages within top 10 root URLs visited over time') +
+    ylab('Count of requests') +
+    xlab('Date') +
     theme(axis.line = element_line(colour = "black"), panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(), panel.background = element_blank(),
           axis.text.x=element_text(angle=45, hjust=1))
