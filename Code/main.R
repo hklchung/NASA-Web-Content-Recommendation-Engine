@@ -70,3 +70,28 @@ top20_host_actv_plot
 # We can see that for the top 20 hosts, their time were mostly spent on /images, /shuttle and /history subpages
 # There were very few activities in the other subpages, suggesting most user engagement comes from the aforementioned
 # 3 root URLs
+
+# 4. Check server response type frequencies on NASA web-----
+# Using server_response and server_response_viz functions to understand how often a server is unable to provide the
+# requested content. Then using xxxxx
+source('server_response.R')
+server_resp_plot = server_response_viz(server_response(df))
+server_404_error_plot = server_404_error_viz(server_404_error(df))
+
+# We can see that the NASA site is mostly running as expected with good responses from the server. However we can see
+# that there seems to be an issue with failing links, mostly captured under the response code 404. This occurs when
+# The server can not find the requested resource. In the browser, this means the URL is not recognised.
+# Using the server 404 functions, we can extract the top 10 URLs associated with 404 errors on the web and can then
+# work out whether these are genuine issues and prioritise fixing the URLs according to their request frequencies.
+# In this case, the two high priority URLs to be fixed are both readme.text files under the /pub/ root URL.
+
+server_403_error_plot = server_403_error_viz(server_403_error(df))
+
+# One additional action we can take off the back of response code analysis is looking at hosts who have triggered the
+# 403 Forbidden server response. 403 error occurs when server is refusing to provide the requested resource to the 
+# client as the client does not have access right to the content.
+# In this plot, we have extracted the top 10 hosts who have triggered the 403 error with information regarding how
+# often the 403 was triggered as a proportion to all their activities on the NASA web in the analysis window. It can
+# be observed from the chart that 163.135.192.101, tty18-23.swipnet.se and user36.znet.com are all highly suspicious. 
+# Despite bass.hooked.net coming in 4th, this host is less suspicious as 403 error activities only account for 0.034%
+# of all their activities.
