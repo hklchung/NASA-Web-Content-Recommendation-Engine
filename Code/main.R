@@ -73,7 +73,7 @@ top20_host_actv_plot
 
 # 4. Check server response type frequencies on NASA web-----
 # Using server_response and server_response_viz functions to understand how often a server is unable to provide the
-# requested content. Then using xxxxx
+# requested content. Then using server_404_error and server_404_error_viz functions to see which URLs are bugged
 source('server_response.R')
 server_resp_plot = server_response_viz(server_response(df))
 server_404_error_plot = server_404_error_viz(server_404_error(df))
