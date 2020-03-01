@@ -1,0 +1,111 @@
+---
+title: "NASA Web Log Insights"
+output:
+  html_document:
+    df_print: paged
+---
+
+### Step 1: Load packages and set up the environment and tables for analysis
+
+```{r message=FALSE, warning=FALSE}
+# 0. Set up the environment and grab data for analysis-----
+rm(list = ls())
+options(java.parameters = "-Xmx8000m")
+library(dplyr)
+library(data.table)
+options(scipen = 999)
+
+# Using extract_data function to grab data from raw NASA web log files
+source('code/extract_data.R')
+df = extract_data('../Data/nasa_19950630.22-19950728.12.tsv.gz')
+df2 = extract_data('../Data/nasa_19950731.22-19950831.22.tsv.gz')
+df = rbind(df, df2)
+rm(df2)
+```
+
+### Step 2: Analyse NASA web average traffic over 24 hours and over the analysis window
+
+```{r message=FALSE, warning=FALSE}
+# Using web_traffic function to count logged activities in each hour of the day
+# Then using web_traffic_viz function to visualise the frequency of logged activities by the hour
+# Using web_traffic_ot function to count logged activities per day
+# Then using web_traffic_ot_viz function to visualise the frequency of logged activities by day
+source('code/web_traffic.R')
+web_plot = web_traffic_viz(web_traffic(df))
+web_ot_plot = web_traffic_ot_viz(web_traffic_ot(df))
+grid.arrange(web_plot, web_ot_plot, ncol = 1)
+```
+
+We can observe from the 'NASA web traffic by hour' plot that during the analysis window, most visitor activities happened between 12 mid-day to 10pm at night. 
+
+Additionally, according to the 'NASA web traffic by date' plot, there was a surge in web traffic on 13th July 1995. Upon research of the date on NASA web [link](https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/list_1995.html)it was discovered that there was a launch on that particular day for space shuttle Discovery with a crew of 5 from Florida. This most likely led to an increase of interest in NASA and hence visitor volume. 
+
+Separate to the above observations, we can also see that there is a couple of days missing from the dataset, between 29-31 July 1995 and on 2 Aug 1995.
+
+### Step 3: Analyse NASA web content browsing pattern and behaviour
+
+```{r message=FALSE, warning=FALSE}
+# Using pop_url and pop_root functions to first understand how often each URL or each root URL is visited
+# Then using top10_url_plot and top10_root_plot to visualise the frequency of visits
+source('code/web_content.R')
+top10_url_plot = pop_url_viz(pop_url(df))
+top10_root_plot = pop_root_viz(pop_root(df))
+top10_url_ot_plot = pop_url_ot_viz(pop_url(df), df)
+top10_root_ot_plot = pop_root_ot_viz(pop_root(df), df)
+grid.arrange(top10_url_plot, top10_url_ot_plot, ncol = 1)
+grid.arrange(top10_root_plot, top10_root_ot_plot, ncol = 1)
+```
+
+First from the 'Top 10 URL requested' plot, 8 out of the top 10 most visited URLs are .gif files and 7 of these fall under the /images/ root URL. This suggests activities on the site were mostly driven by visual content. Looking at the 'Count of requests for top 10 URL visted over time', we can see that request volume was consistent between 15 July and late Aug 1995 with two spikes of visits during pre-13 July 1995 where a launched occured and around 1 September 1995. Once again further investigation from the NASA web [link](https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/list_1995.html) suggests that the second spike is likely associated with a launch scheduled on 7 September 1995.
+
+The observation of large interest in visual content is further supported by the root URL analysis, where we can  observe from the 'Top 10 root URL requested' plot that most online activities on the site were within subpages of the  /images/ root URL, followed by /shuttle/ and /history/. An interesting observation is within this short period of the analysis window, there were consistently more requests for subpages within /images/ than shuttle, except for the period prior to the 13 July 1995 launch. This suggests there was a surge of interest in shuttle-related information likely associated with the shuttle that wass planned for launch days after.
+
+Base on the latter observation, we can surmise that shuttle launches can influence web browsing behaviour of the visitors and peak interest in shuttle-related content. This information can be useful when considering feature engineering for building predictive models for content recommendation.
+
+### Step 4: Analyse visitor (host) activities on NASA web
+
+```{r message=FALSE, warning=FALSE}
+# Using host_actv and pop_host_viz functions to first see the top 20 active hosts
+# Then using top_host_actv_detl and top_host_actv_viz functions to visualise the breakdown of these top 20 hosts
+# activities within the subpages of each root URL
+source('code/host.R')
+top20_host_plot = pop_host_viz(host_actv(df))
+top20_host_actv_plot = top_host_actv_viz(top_host_actv_detl(df))
+top20_host_plot
+top20_host_actv_plot
+```
+
+From the results above, we can see that there were a lot of visits by prodigy.com and proxy.aol.com, to understand how these users are browsing the NASA web and what they were interested in, we have broken down their acvities according to the root URL subpage activities logged.
+
+In 'Top 20 active hosts activity in root URL subpages' plot, we can see that for the top 20 hosts, their time were mostly spent on /images/, /shuttle/ and /history/ subpages. There were very few activities in the other subpages suggesting most user engagement came from the aforementioned 3 root URLs. Furthermore, the distribution of time spent on the respective root URL subpages were fairly consistent across the top 20 active visitors, with a notable interest in /images/ and /history/ by siltb10.orl.mmc.com.
+
+This suggests that future budget spending on content creation should focus more on /images/, /shuttle/ and /history/ which may lead to an increase in engagement for the site.
+
+### Step 5: Analyse server response type frequencies on NASA web
+
+```{r message=FALSE, warning=FALSE}
+# Using server_response and server_response_viz functions to understand how often a server is unable to provide the
+# requested content. Then using server_404_error and server_404_error_viz functions to see which URLs are bugged
+source('code/server_response.R')
+server_resp_plot = server_response_viz(server_response(df))
+server_404_error_plot = server_404_error_viz(server_404_error(df))
+server_resp_plot
+server_404_error_plot
+```
+
+From 'NASA web server response type frequency' plot we can see that the NASA site is mostly running as expected with good responses from the server. However we can see that there seems to be an issue with failing links, captured under the response code 404. This occurs when the server can not find the requested resource. In the browser, this means the URL is not recognised.
+
+We can extract the top 10 URLs associated with 404 errors on the web and then work out whether these are genuine issues and prioritise fixing the URLs according to their request frequencies. In this case, the two high priority URLs to be fixed are both readme.text files under the /pub/ root URL.
+
+Our suggestion here is to leverage the report to identify issues on the site to reduce the likelihood of visitors running into a dead page and lose interest in browsing further, and hence increase visitor engagement on the site.
+
+```{r message=FALSE, warning=FALSE}
+server_403_error_plot = server_403_error_viz(server_403_error(df))
+server_403_error_plot
+```
+
+One additional action we can take off the back of the response code analysis is looking at visitors (hosts) who have triggered the 403 Forbidden server response. 403 error occurs when the server is refusing to provide the requested resource to the  client as the client does not have access right to the content. 
+
+In the 'Top 10 hosts linked to server error 403 and their proportion of 403 error to all other activities' plot, we have identified the top 10 hosts who have triggered the 403 error with information regarding how often the 403 was triggered as a proportion to all their activities on the NASA web within the analysis window. It can be observed from the chart that 163.135.192.101, tty18-23.swipnet.se and user36.znet.com are all highly suspicious. Despite bass.hooked.net coming in 4th, this visitor is considerably less suspicious as 403 error activities only account for 0.034% of all their activities on the NASA web page.
+
+Our suggestion here is to leverage this process to identify visitors with potentially malicious intent who are not genuine users of the NASA web, selectively remove these visitors from the data pool used for any analytics or modelling piece for understanding visitor browsing behaviour such that their activities would not skew or add bias to the results.
