@@ -77,6 +77,8 @@ top20_host_actv_plot
 source('server_response.R')
 server_resp_plot = server_response_viz(server_response(df))
 server_404_error_plot = server_404_error_viz(server_404_error(df))
+server_resp_plot
+server_404_error_plot
 
 # We can see that the NASA site is mostly running as expected with good responses from the server. However we can see
 # that there seems to be an issue with failing links, mostly captured under the response code 404. This occurs when
@@ -86,6 +88,7 @@ server_404_error_plot = server_404_error_viz(server_404_error(df))
 # In this case, the two high priority URLs to be fixed are both readme.text files under the /pub/ root URL.
 
 server_403_error_plot = server_403_error_viz(server_403_error(df))
+server_403_error_plot
 
 # One additional action we can take off the back of response code analysis is looking at hosts who have triggered the
 # 403 Forbidden server response. 403 error occurs when server is refusing to provide the requested resource to the 
@@ -95,3 +98,8 @@ server_403_error_plot = server_403_error_viz(server_403_error(df))
 # be observed from the chart that 163.135.192.101, tty18-23.swipnet.se and user36.znet.com are all highly suspicious. 
 # Despite bass.hooked.net coming in 4th, this host is less suspicious as 403 error activities only account for 0.034%
 # of all their activities.
+
+# 5. Pre-process data for modelling-----
+# Using model_data_preprocess function to transform the dataset for modelling
+source('model_data_preprocess.R')
+modl_data = modl_data_process(df)
