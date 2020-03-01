@@ -1,4 +1,13 @@
-<h3 align="center">NASA Web Logs</h3> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/1200px-NASA_logo.svg.png" height="30">
+<br />
+<p align="center">
+  <a href="https://github.com/hklchung/Short-Project-NASA-Web-Logs">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/1200px-NASA_logo.svg.png" height="30">
+  </a>
+
+  <h3 align="center">NASA Web Logs</h3>
+
+  </p>
+</p>
 
 ## About the Project
 
