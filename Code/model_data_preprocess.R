@@ -1,7 +1,7 @@
 # NASA Web Logs
 # predictive model data preprocessing
 # These functions help the user to massage the data for model building
-modl_data_process = function(df){
+modl_data_process = function(df, launch_d = NULL){
   # First give ranks for logged events per host
   mdf_r = df[df$response < 400,] %>%
     dplyr::select(-one_of(c('logname', 'method', 'bytes', 'referer', 'useragent'))) %>%
@@ -55,6 +55,12 @@ modl_data_process = function(df){
   mdf_l$url_type_lag1 = ifelse(mdf_l$my_ranks == 1, NA, mdf_l$url_type_lag1)
   mdf_l$url_type_lag2 = ifelse(mdf_l$my_ranks %in% seq(1, 2), NA, mdf_l$url_type_lag2)
   mdf_l$url_type_lag3 = ifelse(mdf_l$my_ranks %in% seq(1, 3), NA, mdf_l$url_type_lag3)
+  
+  # Adding days from the next scheduled launch
+  if (exists('launch_d')){
+    mdf_l$d_from_launch1 = as.integer(difftime(as.Date(launch_d[1]), mdf_l$time,units = c("days")))
+    mdf_l$d_from_launch2 = as.integer(difftime(as.Date(launch_d[2]), mdf_l$time,units = c("days")))
+  }
   
   mdf_l = mdf_l[, -c('host', 'time', 'url', 'response', 'depth', 'url_type')]
   
