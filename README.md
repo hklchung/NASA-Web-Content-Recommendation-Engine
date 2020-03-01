@@ -1,4 +1,5 @@
-# NASA Web Logs
+<h3 align="center">NASA Web Logs</h3> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/1200px-NASA_logo.svg.png" height="30">
+
 ## About the Project
 
 In this project, I would like to analyse the <a href="http://opensource.indeedeng.io/imhotep/docs/sample-data/"><strong>NASA Web Logs Dataset</strong></a> and find interesting insights and build a solution for a made-up scenario. 
