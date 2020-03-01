@@ -103,3 +103,4 @@ server_403_error_plot
 # Using model_data_preprocess function to transform the dataset for modelling
 source('model_data_preprocess.R')
 modl_data = modl_data_process(df)
+write.csv(modl_data, file = '../../Data/nasa_modl_data.csv', row.names=FALSE)
