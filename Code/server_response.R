@@ -23,7 +23,7 @@ server_response = function(df){
 # Function to plot server response type frequencies
 server_response_viz = function(response_freq){
   level_order = response_freq$response
-  p = ggplot(data=resp_freq, aes(x= factor(response, level = level_order), y=freq, fill = response)) + 
+  p = ggplot(data=response_freq, aes(x= factor(response, level = level_order), y=freq, fill = response)) + 
     geom_col() +
     geom_text(aes(label=sprintf('n= %s', freq)), position=position_dodge(width=0.9), vjust=-0.5) +
     ggtitle('NASA web server response type frequency') +
