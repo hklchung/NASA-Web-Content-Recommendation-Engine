@@ -33,3 +33,5 @@ Here is my end-to-end solution for the Digital team at NASA to implement into th
 ## Known issues
 
 During the development of the code, I did not look closely at the individual URLs and thus was not aware that many of the requests to subpages under the image root URL were actually loading the NASA logo which appears on every page. Therefore this is not a genuine web browsing behaviour which we should analyse or model upon.
+
+There will not be any further developments post-3rd March 2020.
