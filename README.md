@@ -29,3 +29,7 @@ Here is my end-to-end solution for the Digital team at NASA to implement into th
   * A streamlined process built in Python to leverage data produced via the R functions to build propensity models for content on NASA web
   * Builds one propensity model per content type available on NASA web (3 can be found in the Jupyter notebook)
   * Solution design for content recommendation engine - how all the propensity models fit together such that NASA web can provide content most relevant and contextual to the visitor at any point in time
+
+## Known issues
+
+During the development of the code, I did not look closely at the individual URLs and thus was not aware that many of the requests to subpages under the image root URL were actually loading the NASA logo which appears on every page. Therefore this is not a genuine web browsing behaviour which we should analyse or model upon.
